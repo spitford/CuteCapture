@@ -92,7 +92,7 @@ void capture_deinit() {
 
 // Gets 240x720 RGB24 (rotated) frame.
 // frameBuf should be FRAMEBUFSIZE big.
-int capture_grabFrame(uint8_t *frameBuf) {
+int capture_grabFrame(uint8_t *frameBuf, uint32_t *dataSize) {
     int result=vend_out(CMDOUT_CAPTURE_START, 0, 0, frameBuf);
     if(result<0)
         return (result==LIBUSB_ERROR_TIMEOUT)? CAPTURE_SKIP: CAPTURE_ERROR;
@@ -110,6 +110,7 @@ int capture_grabFrame(uint8_t *frameBuf) {
         }
     } while(bytesIn<FRAMESIZE && result==LIBUSB_SUCCESS && transferred>0);
 	
+    *dataSize = bytesIn;
     if(result==LIBUSB_ERROR_PIPE) {
         libusb_clear_halt(dev, EP2_IN);
         return CAPTURE_ERROR;

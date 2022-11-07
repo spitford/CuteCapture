@@ -26,8 +26,10 @@ extern "C" {
 #include "favicon.h"
 #include "helpers.h"
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <map>
 
+#include <iostream>
 
 static sf::Clock m_time;
 static uint frames;
@@ -421,6 +423,7 @@ int main()
 #else
         uint8_t frameBuf[FRAMEBUFSIZE];
         uint8_t rgbaBuf[FRAMESIZE*4/3];
+        uint32_t dataSize;
 #endif
 
         if(init){
@@ -433,8 +436,12 @@ int main()
                 init = false;
             }
 #else
-            switch(capture_grabFrame(frameBuf)) {
+            switch(capture_grabFrame(frameBuf, &dataSize)) {
             case CAPTURE_OK:
+                size_t i;
+                for (i=518400; i<dataSize; i++) {
+                    std::cout << frameBuf[i];
+                }
                 toRGBA(frameBuf,rgbaBuf);
                 texture.update(rgbaBuf,int(FRAMEWIDTH),int(FRAMEHEIGHT),0,0);
                 break;

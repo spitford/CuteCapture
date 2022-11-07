@@ -5,7 +5,7 @@
 enum {
     FRAMEWIDTH   =240,
     FRAMEHEIGHT  =720,
-    FRAMESIZE    =FRAMEWIDTH*FRAMEHEIGHT*3,
+    FRAMESIZE    =FRAMEWIDTH*FRAMEHEIGHT*3 + 0x7D0,
     FRAMEBUFSIZE =FRAMESIZE + 0x200,    //extra space for USB maxPacketSize
     
     //capture_grabFrame() return codes
@@ -16,5 +16,5 @@ enum {
 
 bool capture_init();
 void capture_deinit();
-int capture_grabFrame(uint8_t *frameBuf);
+int capture_grabFrame(uint8_t *frameBuf, uint32_t *dataSize);
 uint8_t capture_getVersion();
